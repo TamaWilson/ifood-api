@@ -13,6 +13,7 @@ import java.util.Optional;
 @Path("/restaurantes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name="restaurante")
 public class RestauranteResource {
 
     @GET
@@ -52,6 +53,7 @@ public class RestauranteResource {
 
     @GET
     @Path("{idRestaurante}/pratos")
+    @Tag(name="prato")
     public List<Prato> buscarPratos(@PathParam("idRestaurante") Long idRestaurante){
         Optional<Restaurante> restauranteOP = Restaurante.findByIdOptional(idRestaurante);
         if(restauranteOP.isEmpty()){
@@ -63,6 +65,7 @@ public class RestauranteResource {
     @POST
     @Path("{idRestaurante}/pratos")
     @Transactional
+    @Tag(name="prato")
     public Response adicionarPrato(@PathParam("idRestaurante") Long idRestaurante, Prato dto){
         Optional<Restaurante> restauranteOP = Restaurante.findByIdOptional(idRestaurante);
         if(restauranteOP.isEmpty()){
@@ -80,6 +83,7 @@ public class RestauranteResource {
     @PUT
     @Path("{idRestaurante}/pratos/{id}")
     @Transactional
+    @Tag(name="prato")
     public void atualizarPrato(@PathParam("idRestaurante") Long idRestaurante, @PathParam("id") Long id,  Prato dto){
         Optional<Restaurante> restauranteOP = Restaurante.findByIdOptional(idRestaurante);
         if(restauranteOP.isEmpty()){
@@ -102,6 +106,7 @@ public class RestauranteResource {
     @DELETE
     @Path("{idRestaurante}/pratos/{id}")
     @Transactional
+    @Tag(name="prato")
     public void deletarPrato(@PathParam("idRestaurante") Long idRestaurante, @PathParam("id") Long id){
         Optional<Restaurante> restauranteOP = Restaurante.findByIdOptional(idRestaurante);
         if(restauranteOP.isEmpty()){
