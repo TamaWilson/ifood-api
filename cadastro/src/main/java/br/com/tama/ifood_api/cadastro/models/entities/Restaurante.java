@@ -1,6 +1,5 @@
-package br.com.tama.ifood_api.cadastro.models;
+package br.com.tama.ifood_api.cadastro.models.entities;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -22,7 +21,7 @@ public class Restaurante extends PanacheEntityBase {
 
     public String nome;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
     public Localizacao localizacao;
 
     @CreationTimestamp

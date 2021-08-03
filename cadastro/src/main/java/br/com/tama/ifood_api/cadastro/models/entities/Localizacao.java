@@ -1,4 +1,4 @@
-package br.com.tama.ifood_api.cadastro.models;
+package br.com.tama.ifood_api.cadastro.models.entities;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -12,7 +12,7 @@ public class Localizacao extends PanacheEntityBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    public Double latidude;
+    public Double latitude;
 
     public Double longitude;
 }

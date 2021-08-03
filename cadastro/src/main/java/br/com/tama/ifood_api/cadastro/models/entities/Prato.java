@@ -1,4 +1,4 @@
-package br.com.tama.ifood_api.cadastro.models;
+package br.com.tama.ifood_api.cadastro.models.entities;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
