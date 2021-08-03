@@ -1,14 +1,27 @@
 package br.com.tama.ifood_api.cadastro.resources;
 
-import br.com.tama.ifood_api.cadastro.models.Prato;
-import br.com.tama.ifood_api.cadastro.models.Restaurante;
+import br.com.tama.ifood_api.cadastro.infra.exceptions.dto.ConstraintValidationReponse;
+import br.com.tama.ifood_api.cadastro.models.dto.AdicionarRestauranteDTO;
+import br.com.tama.ifood_api.cadastro.models.dto.AtualizarRestauranteDTO;
+import br.com.tama.ifood_api.cadastro.models.dto.RestauranteDTO;
+import br.com.tama.ifood_api.cadastro.models.dto.mappers.RestauranteMapper;
+import br.com.tama.ifood_api.cadastro.models.entities.Prato;
+import br.com.tama.ifood_api.cadastro.models.entities.Restaurante;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Path("/restaurantes")
 @Produces(MediaType.APPLICATION_JSON)
@@ -16,9 +29,14 @@ import java.util.Optional;
 @Tag(name="restaurante")
 public class RestauranteResource {
 
+    @Inject
+    RestauranteMapper restauranteMapper;
+
     @GET
-    public List<Restaurante> hello(){
-        return Restaurante.listAll();
+    public List<RestauranteDTO> hello(){
+        Stream<Restaurante> restaurantes = Restaurante.streamAll();
+        return restaurantes.map(r-> restauranteMapper.toRestauranteDTO(r)).collect(Collectors.toList());
+
     }
 
     @POST
@@ -31,13 +49,13 @@ public class RestauranteResource {
     @PUT
     @Path("{id}")
     @Transactional
-    public void atualizar(@PathParam("id") Long id, Restaurante dto){
+    public void atualizar(@PathParam("id") Long id, AtualizarRestauranteDTO dto){
         Optional<Restaurante> restauranteOP = Restaurante.findByIdOptional(id);
         if(restauranteOP.isEmpty()){
             throw new NotFoundException();
         }
         Restaurante restaurante = restauranteOP.get();
-        restaurante.nome = dto.nome;
+        restauranteMapper.toRestaurante(dto, restaurante);
         restaurante.persist();
     }
 
