@@ -1,0 +1,10 @@
+{
+  "iss": "http://localhost:8180/auth/realms/ifood",
+  "jti": "8c4b613a-24b2-423c-aef8-de7c5a7ee89a",
+  "sub": "61983752-a6f0-47c0-a0f2-859d9ed58b4d",
+  "preferred_username": "proprietario1",
+  "aud": "account",
+  "groups": [
+    "proprietario"
+  ]
+}
