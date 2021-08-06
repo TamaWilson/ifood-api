@@ -1,9 +1,13 @@
 package br.com.tama.ifood_api.cadastro.models.entities;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "localizacao")
