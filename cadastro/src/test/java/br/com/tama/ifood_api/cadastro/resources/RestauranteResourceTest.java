@@ -8,9 +8,8 @@ import com.github.database.rider.core.api.configuration.Orthography;
 import com.github.database.rider.core.api.dataset.DataSet;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.RestAssured;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
-import io.restassured.specification.RequestSpecification;
 import org.approvaltests.Approvals;
 import org.junit.jupiter.api.Test;
 
@@ -22,17 +21,15 @@ import static io.restassured.RestAssured.given;
 @DBUnit(caseInsensitiveStrategy = Orthography.LOWERCASE)
 @QuarkusTest
 @QuarkusTestResource(CadastroTestLifecycleManager.class)
+@TestSecurity(user = "proprietario", roles = "proprietario")
 class RestauranteResourceTest {
-
-    private RequestSpecification given(){
-        return RestAssured.given().contentType(ContentType.JSON);
-    }
 
 
     @Test
     @DataSet("restaurantes-cenario-1.yml")
     void testBuscarRestaurantes(){
         String resultado = given()
+                .contentType(ContentType.JSON)
                 .when().get("/restaurantes")
                 .then()
                 .statusCode(200)
@@ -47,6 +44,7 @@ class RestauranteResourceTest {
         dto.nome = "novoNome";
         Long parameterValue = 123L;
         given()
+                .contentType(ContentType.JSON)
                 .with().pathParam("id", parameterValue)
                 .body(dto)
                 .when().put("/restaurantes/{id}")
