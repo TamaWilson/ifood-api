@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,13 +44,13 @@ public class CarrinhoResource {
 
     @POST
     @Path("/prato/{idPrato}")
-    public Uni<Long> adicionarPrato(@PathParam("idPrato") Long idPrato) {
+    public Response adicionarPrato(@PathParam("idPrato") Long idPrato) {
         //poderia retornar o pedido atual
         PratoCarrinho pc = new PratoCarrinho();
         pc.cliente = CLIENTE;
         pc.prato = idPrato;
-        return PratoCarrinho.save(client, CLIENTE, idPrato);
-
+        PratoCarrinho.save(client, CLIENTE, idPrato).await().indefinitely();
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @POST
@@ -60,8 +61,7 @@ public class CarrinhoResource {
         pedido.cliente = cliente;
         List<PratoCarrinho> pratoCarrinho = PratoCarrinho.findCarrinho(client, cliente).await().indefinitely();
         //Utilizar mapstruts
-        List<PratoPedidoDTO> pratos = pratoCarrinho.stream().map(pc -> from(pc)).collect(Collectors.toList());
-        pedido.pratos = pratos;
+        pedido.pratos = pratoCarrinho.stream().map(this::from).collect(Collectors.toList());
 
         RestauranteDTO restaurante = new RestauranteDTO();
         restaurante.nome = "nome restaurante";
