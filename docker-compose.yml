@@ -81,6 +81,7 @@ services:
       - zookeeper
     environment:
       - ZOOKEEPER_CONNECT=zookeeper:2181
+      - ADVERTISED_LISTENERS=PLAINTEXT://host.docker.internal:9092
   kafdrop:
     container_name: kafdrop_container
     image: obsidiandynamics/kafdrop:3.24.0
