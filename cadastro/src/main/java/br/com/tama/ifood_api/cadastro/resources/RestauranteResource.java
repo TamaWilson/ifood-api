@@ -82,7 +82,7 @@ public class RestauranteResource {
         restaurante.proprietario = sub;
         restaurante.persist();
 
-        // emitter.send(restaurante);
+        emitter.send(restaurante);
         return Response.status(Response.Status.CREATED).build();
     }
 
