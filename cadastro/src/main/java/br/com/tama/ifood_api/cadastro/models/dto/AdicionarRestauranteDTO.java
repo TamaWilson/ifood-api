@@ -5,18 +5,12 @@ import br.com.tama.ifood_api.cadastro.models.dto.interfaces.DTO;
 import br.com.tama.ifood_api.cadastro.models.entities.Restaurante;
 
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @ValidDTO
 public class AdicionarRestauranteDTO implements DTO {
-
-    @NotEmpty
-    @NotNull
-    public String proprietario;
-
 
     @NotNull
     @Pattern(regexp = "[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}\\/[0-9]{4}\\-[0-9]{2}")
