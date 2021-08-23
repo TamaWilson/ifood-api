@@ -2,7 +2,7 @@ version: "3.7"
 services:
   postgres_cadastro:
     container_name: postgres_cadastro_ifood
-    image: postgres:12.2-alpine
+    image: debezium/example-postgres
     environment:
       POSTGRES_USER: cadastro
       POSTGRES_PASSWORD: cadastro
@@ -121,4 +121,35 @@ services:
     ports:
      - "5601:5601"
     environment:
-      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+        ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      
+  logstash:
+    container_name: logstash
+    image: docker.elastic.co/logstash/logstash-oss:6.8.2
+    ports:
+      - "12201:12201/udp"
+      - "5044:5044"    
+    volumes:
+      - source: ./pipelines
+        target: /usr/share/logstash/pipeline
+        type: bind
+    depends_on:
+      - elastic
+  connect:
+    container_name: connect
+    image: debezium/connect:1.1
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+    ports:
+      - "8083:8083"
+    links:
+      - kafka
+      - postgres_cadastro
+    depends_on:
+      - kafka
+      - zookeeper
+      - postgres_cadastro
