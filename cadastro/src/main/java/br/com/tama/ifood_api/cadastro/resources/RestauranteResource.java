@@ -7,6 +7,9 @@ import br.com.tama.ifood_api.cadastro.models.dto.RestauranteDTO;
 import br.com.tama.ifood_api.cadastro.models.dto.mappers.RestauranteMapper;
 import br.com.tama.ifood_api.cadastro.models.entities.Prato;
 import br.com.tama.ifood_api.cadastro.models.entities.Restaurante;
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.Claims;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.SimplyTimed;
 import org.eclipse.microprofile.metrics.annotation.Timed;
@@ -50,6 +53,13 @@ public class RestauranteResource {
     RestauranteMapper restauranteMapper;
 
     @Inject
+    JsonWebToken jwt;
+
+    @Inject
+    @Claim(standard = Claims.sub)
+    String sub;
+
+    @Inject
     @Channel("restaurantes")
     Emitter<Restaurante> emitter;
 
@@ -69,9 +79,10 @@ public class RestauranteResource {
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ConstraintValidationReponse.class)))
     public Response adicionar(@Valid AdicionarRestauranteDTO dto) {
         Restaurante restaurante = restauranteMapper.toRestaurante(dto);
+        restaurante.proprietario = sub;
         restaurante.persist();
 
-        emitter.send(restaurante);
+        // emitter.send(restaurante);
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -84,6 +95,11 @@ public class RestauranteResource {
             throw new NotFoundException();
         }
         Restaurante restaurante = restauranteOP.get();
+
+        if(!restaurante.proprietario.equals(sub)){
+            throw new ForbiddenException("");
+        }
+
         restauranteMapper.toRestaurante(dto, restaurante);
         restaurante.persist();
     }
