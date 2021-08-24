@@ -68,9 +68,12 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.testcontainers/postgresql -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
+            <version>1.16.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.database-rider</groupId>
